@@ -1,4 +1,4 @@
-module github.com/volcengine/volc-sdk-golang
+module github.com/KleeTaurus/volc-sdk-golang
 
 go 1.14
 
@@ -19,4 +19,4 @@ require (
 	gopkg.in/natefinch/lumberjack.v2 v2.0.0
 )
 
-replace github.com/volcengine/volc-sdk-golang => ../volc-sdk-golang
+replace github.com/KleeTaurus/volc-sdk-golang => ../volc-sdk-golang
