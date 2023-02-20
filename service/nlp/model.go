@@ -9,6 +9,21 @@ type ErrorResult struct {
 	Message string `json:"message"`
 }
 
+type Response struct {
+	ResponseMetadata struct {
+		RequestId string `json:"RequestId"`
+		Action    string `json:"Action"`
+		Version   string `json:"Version"`
+		Service   string `json:"Service"`
+		Region    string `json:"Region"`
+		Error     struct {
+			CodeN   int    `json:"CodeN"`
+			Code    string `json:"Code"`
+			Message string `json:"Message"`
+		} `json:"Error"`
+	} `json:"ResponseMetadata"`
+}
+
 type CharResult struct {
 	Correct    string  `json:"correct"`
 	Original   string  `json:"original"`
@@ -81,10 +96,22 @@ type TextSummarizationResult struct {
 	Result string `json:"result"`
 }
 
-func UnmarshalResultInto(data []byte, result interface{}) error {
+func UnmarshalResultInto_bak(data []byte, result interface{}) error {
 	resp := new(ErrorResult)
 	if err := json.Unmarshal(data, resp); err == nil && resp.Message != "" {
 		return fmt.Errorf("request error %s", resp.Message)
+	}
+
+	if err := json.Unmarshal(data, result); err != nil {
+		return fmt.Errorf("fail to unmarshal result, %v", err)
+	}
+	return nil
+}
+
+func UnmarshalResultInto(data []byte, result interface{}) error {
+	resp := new(Response)
+	if err := json.Unmarshal(data, resp); err == nil && resp.ResponseMetadata.Error.Message != "" {
+		return fmt.Errorf("request error %d-%s", resp.ResponseMetadata.Error.CodeN, resp.ResponseMetadata.Error.Message)
 	}
 
 	if err := json.Unmarshal(data, result); err != nil {
